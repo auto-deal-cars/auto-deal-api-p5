@@ -14,6 +14,13 @@ provider:
   timeout: 30
   httpApi:
     cors: true
+    authorizers:
+      autoDealAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: ${env.AUDIENCE_ISSUER_URL}
+        audience:
+          - ${env.AUDIENCE_CLIENT_ID}
   environment:
     DATABASE_URL: ${env.DATABASE_URL}
 functions:
@@ -24,9 +31,8 @@ functions:
       - httpApi:
           path: /vehicle
           method: post
-      - cognitoUserPool:
-          pool: ClockWiseUserPool
-          trigger: PreSignUp
+          authorizer:
+            name: autoDealAuthorizer
   update_vehicle:
     image:
       name: vehicle
@@ -35,6 +41,8 @@ functions:
       - httpApi:
           path: /vehicle/{id}
           method: put
+          authorizer:
+            name: autoDealAuthorizer
   get_vehicle:
     image:
       name: vehicle
@@ -43,5 +51,7 @@ functions:
       - httpApi:
           path: /vehicle/{id}
           method: get
+          authorizer:
+            name: autoDealAuthorizer
 plugins:
   - serverless-dotenv-plugin
