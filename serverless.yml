@@ -18,11 +18,13 @@ provider:
       autoDealAuthorizer:
         type: jwt
         identitySource: $request.header.Authorization
-        issuerUrl: ${env.AUDIENCE_ISSUER_URL}
+        issuerUrl: ${self:provider.environment.AUDIENCE_ISSUER_URL}
         audience:
-          - ${env.AUDIENCE_CLIENT_ID}
+          - ${self:provider.environment.AUDIENCE_CLIENT_ID}
   environment:
     DATABASE_URL: ${env.DATABASE_URL}
+    AUDIENCE_ISSUER_URL: ${env.AUDIENCE_ISSUER_URL}
+    AUDIENCE_CLIENT_ID: ${env.AUDIENCE_CLIENT_ID}
 functions:
   create_vehicle:
     image:
