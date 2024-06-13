@@ -1,0 +1,47 @@
+service: auto-deal
+package:
+  individually: true
+frameworkVersion: '3'
+provider:
+  name: aws
+  ecr:
+    images:
+      vehicle:
+        path: ./vehicle
+  stage: dev
+  region: us-east-1
+  runtime: python3.9
+  timeout: 30
+  httpApi:
+    cors: true
+  environment:
+    DATABASE_URL: ${env.DATABASE_URL}
+functions:
+  create_vehicle:
+    image:
+      name: vehicle
+    events:
+      - httpApi:
+          path: /vehicle
+          method: post
+      - cognitoUserPool:
+          pool: ClockWiseUserPool
+          trigger: PreSignUp
+  update_vehicle:
+    image:
+      name: vehicle
+      command: ["adapters.controllers.update_vehicle_controller.update_vehicle"]
+    events:
+      - httpApi:
+          path: /vehicle/{id}
+          method: put
+  get_vehicle:
+    image:
+      name: vehicle
+      command: ["adapters.controllers.get_vehicle_controller.get_vehicle"]
+    events:
+      - httpApi:
+          path: /vehicle/{id}
+          method: get
+plugins:
+  - serverless-dotenv-plugin
