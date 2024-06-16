@@ -18,9 +18,9 @@ provider:
       autoDealAuthorizer:
         type: jwt
         identitySource: $request.header.Authorization
-        issuerUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_S3oYOM4bD
+        issuerUrl: ${self:provider.environment.AUDIENCE_ISSUER_URL}
         audience:
-          - 3sbd8v6bsjjoopdtpdrm0dogd6
+          - ${self:provider.environment.AUDIENCE_CLIENT_ID}
   environment:
     DATABASE_URL: ${env.DATABASE_URL}
     AUDIENCE_ISSUER_URL: ${env.AUDIENCE_ISSUER_URL}
