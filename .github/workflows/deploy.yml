@@ -32,7 +32,6 @@ jobs:
       if: success()
       run: |
         npm install -g serverless@3.38.0
-        serverless plugin install -n serverless-dotenv-plugin
         serverless deploy
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
