@@ -64,5 +64,7 @@ functions:
       - httpApi:
           path: /vehicles
           method: get
+          authorizer:
+            name: autoDealAuthorizer
 plugins:
   - serverless-dotenv-plugin

@@ -1,4 +1,7 @@
+"""alembic env."""
 from logging.config import fileConfig
+
+import os
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -15,6 +18,7 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+    config.set_main_option("DATABASE_URL", os.environ["DATABASE_URL"])
 
 # add your model's MetaData object here
 # for 'autogenerate' support
