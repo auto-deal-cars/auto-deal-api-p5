@@ -2,6 +2,7 @@ service: auto-deal
 package:
   individually: true
 frameworkVersion: '3'
+useDotenv: true
 provider:
   name: aws
   ecr:
@@ -66,5 +67,3 @@ functions:
           method: get
           authorizer:
             name: autoDealAuthorizer
-plugins:
-  - serverless-dotenv-plugin
