@@ -22,12 +22,14 @@ def register_vehicle(event, context):
                 'message': 'Vehicle created successfully!',
             })
         }
-    except ValidationError as e:
+    except ValidationError as error:
         return {
             'statusCode': 400,
             'body': json.dumps({
                 'message': 'Validation error',
-                'errors': e.errors()
+                'errors': error.errors(
+                    include_url=False
+                )
             })
         }
     except Exception:
