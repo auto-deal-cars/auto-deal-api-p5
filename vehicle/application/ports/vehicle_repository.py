@@ -4,7 +4,7 @@ This module contains the repository for the vehicle application.
 from abc import ABC, abstractmethod
 
 from typing import List
-from domain.entities.vehicle import Vehicle
+from vehicle.domain.entities.vehicle import Vehicle
 
 class VehicleRepository(ABC):
     """
@@ -18,7 +18,7 @@ class VehicleRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, vehicle: Vehicle) -> None:
+    def update(self, vehicle_id: int, vehicle: Vehicle) -> None:
         """
         This method updates a vehicle in the database.
         """
@@ -31,8 +31,8 @@ class VehicleRepository(ABC):
         """
         pass
 
-    def get_all(self) -> List[Vehicle]:
+    def get_all_available(self) -> List[Vehicle]:
         """
-        This method gets all vehicles from the database.
+        This method gets all available vehicles from the database.
         """
         pass

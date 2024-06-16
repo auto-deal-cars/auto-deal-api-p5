@@ -5,7 +5,7 @@ This module contains the database models for the AutoDeal application.
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, UniqueConstraint
 from sqlalchemy.orm import relationship
-from infrastructure.database.setup import Base
+from vehicle.infrastructure.database.setup import Base
 
 class VehicleBrand(Base):
     """

@@ -2,9 +2,9 @@
 import json
 from pydantic import ValidationError
 
-from application.services.vehicle_service import VehicleService
-from adapters.repositories.vehicle_repository_adapter import VehicleRepositoryAdapter
-from infrastructure.database.setup import get_db
+from vehicle.application.services.vehicle_service import VehicleService
+from vehicle.adapters.repositories.vehicle_repository_adapter import VehicleRepositoryAdapter
+from vehicle.infrastructure.database.setup import get_db
 
 def register_vehicle(event, context):
     """ Register a new Vehicle """

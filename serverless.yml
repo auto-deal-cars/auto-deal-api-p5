@@ -10,7 +10,7 @@ provider:
         path: ./vehicle
   stage: dev
   region: us-east-1
-  runtime: python3.9
+  runtime: python3.10
   timeout: 30
   httpApi:
     cors: true
@@ -18,13 +18,14 @@ provider:
       autoDealAuthorizer:
         type: jwt
         identitySource: $request.header.Authorization
-        issuerUrl: ${self:provider.environment.AUDIENCE_ISSUER_URL}
+        issuerUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_S3oYOM4bD
         audience:
-          - ${self:provider.environment.AUDIENCE_CLIENT_ID}
+          - 3sbd8v6bsjjoopdtpdrm0dogd6
   environment:
     DATABASE_URL: ${env.DATABASE_URL}
     AUDIENCE_ISSUER_URL: ${env.AUDIENCE_ISSUER_URL}
     AUDIENCE_CLIENT_ID: ${env.AUDIENCE_CLIENT_ID}
+  architecture: arm64
 functions:
   create_vehicle:
     image:
@@ -38,7 +39,7 @@ functions:
   update_vehicle:
     image:
       name: vehicle
-      command: ["adapters.controllers.update_vehicle_controller.update_vehicle"]
+      command: ["vehicle.adapters.controllers.update_vehicle_controller.update_vehicle"]
     events:
       - httpApi:
           path: /vehicle/{id}
@@ -48,12 +49,20 @@ functions:
   get_vehicle:
     image:
       name: vehicle
-      command: ["adapters.controllers.get_vehicle_controller.get_vehicle"]
+      command: ["vehicle.adapters.controllers.get_vehicle_controller.get_vehicle"]
     events:
       - httpApi:
           path: /vehicle/{id}
           method: get
           authorizer:
             name: autoDealAuthorizer
+  list_available_vehicles:
+    image:
+      name: vehicle
+      command: ["vehicle.adapters.controllers.list_available_vehicles_controller.list_available_vehicles"]
+    events:
+      - httpApi:
+          path: /vehicles
+          method: get
 plugins:
   - serverless-dotenv-plugin

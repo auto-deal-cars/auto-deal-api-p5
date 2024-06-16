@@ -1,8 +1,8 @@
 """ This module contains the service for the vehicle application """
-
 from typing import List
-from domain.entities.vehicle import Vehicle
-from application.ports.vehicle_repository import VehicleRepository
+
+from vehicle.domain.entities.vehicle import Vehicle
+from vehicle.application.ports.vehicle_repository import VehicleRepository
 
 class VehicleService:
     """ This class contains the service for the vehicle application """
@@ -17,8 +17,8 @@ class VehicleService:
 
     def update_vehicle(self, vehicle_id: int, vehicle_data: dict) -> None:
         """ Update a Vehicle """
-        self.vehicle_repository.get(vehicle_id)
         vehicle = Vehicle(**vehicle_data)
+
         self.vehicle_repository.update(vehicle_id, vehicle)
 
     def get(self, vehicle_id: int) -> Vehicle:
@@ -26,6 +26,6 @@ class VehicleService:
         vehicle = self.vehicle_repository.get(vehicle_id)
         return vehicle
 
-    def get_all(self) -> List[Vehicle]:
-        """ Get all Vehicles """
-        return self.vehicle_repository.get_all()
+    def get_all_available(self) -> List[Vehicle]:
+        """ Get all available Vehicles """
+        return self.vehicle_repository.get_all_available()

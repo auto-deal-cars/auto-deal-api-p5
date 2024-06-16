@@ -4,9 +4,9 @@ This class contains the repository for the vehicle application.
 from typing import List
 from sqlalchemy.orm import Session
 
-from domain.entities.vehicle import Vehicle as VehicleEntity
-from application.ports.vehicle_repository import VehicleRepository
-from infrastructure.database.models import Vehicle, VehicleBrand
+from vehicle.domain.entities.vehicle import Vehicle as VehicleEntity
+from vehicle.application.ports.vehicle_repository import VehicleRepository
+from vehicle.infrastructure.database.models import Vehicle, VehicleBrand
 
 class VehicleRepositoryAdapter(VehicleRepository):
     """
@@ -76,8 +76,16 @@ class VehicleRepositoryAdapter(VehicleRepository):
             price=vehicle.price
         )
 
-    def get_all(self) -> List[VehicleEntity]:
+    def get_all_available(self) -> List[VehicleEntity]:
         """
-        Get all vehicles from the database.
+        Get all available vehicles from the database.
         """
-        return self.db.query(Vehicle).all()
+        vehicles = self.db.query(Vehicle).filter(Vehicle.sold is False).all()
+
+        return [VehicleEntity(
+            brand_name=vehicle.brand.name,
+            model=vehicle.model,
+            year=vehicle.year,
+            color=vehicle.color,
+            price=vehicle.price
+        ) for vehicle in vehicles]
