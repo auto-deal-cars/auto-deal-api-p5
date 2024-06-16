@@ -35,7 +35,10 @@ def update_vehicle(event, context):
         return {
             'statusCode': 400,
             'body': json.dumps({
-                'message': 'Validation error'
+                'message': 'Validation error',
+                'errors': error.errors(
+                    include_url=False
+                )
             })
         }
     except Exception as error:

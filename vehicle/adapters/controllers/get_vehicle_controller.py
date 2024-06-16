@@ -28,11 +28,13 @@ def get_vehicle(event, context):
             'body': json.dumps(vehicle.model_dump()),
         }
     except ValidationError as error:
-        print(error)
         return {
             'statusCode': 400,
             'body': json.dumps({
-                'message': 'Validation error'
+                'message': 'Validation error',
+                'errors': error.errors(
+                    include_url=False
+                )
             })
         }
     except Exception as error:
