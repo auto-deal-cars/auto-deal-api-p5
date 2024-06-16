@@ -1,5 +1,6 @@
 """ This module contains the service for the vehicle application """
 from typing import List
+from sqlalchemy.orm.exc import NoResultFound
 
 from vehicle.domain.entities.vehicle import Vehicle
 from vehicle.application.ports.vehicle_repository import VehicleRepository
@@ -24,6 +25,8 @@ class VehicleService:
     def get(self, vehicle_id: int) -> Vehicle:
         """ Get a Vehicle by its ID """
         vehicle = self.vehicle_repository.get(vehicle_id)
+        if vehicle is None:
+            raise NoResultFound(f"Vehicle with ID {vehicle_id} not found")
         return vehicle
 
     def get_all_available(self) -> List[Vehicle]:

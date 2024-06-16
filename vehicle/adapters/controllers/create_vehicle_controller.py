@@ -1,6 +1,7 @@
 """ This module contains the controller for the create vehicle """
 import json
 from pydantic import ValidationError
+from sqlalchemy.exc import IntegrityError
 
 from vehicle.application.services.vehicle_service import VehicleService
 from vehicle.adapters.repositories.vehicle_repository_adapter import VehicleRepositoryAdapter
@@ -30,6 +31,13 @@ def register_vehicle(event, context):
                 'errors': error.errors(
                     include_url=False
                 )
+            })
+        }
+    except IntegrityError:
+        return {
+            'statusCode': 409,
+            'body': json.dumps({
+                'message': 'Conflict error: Vehicle already exists',
             })
         }
     except Exception:

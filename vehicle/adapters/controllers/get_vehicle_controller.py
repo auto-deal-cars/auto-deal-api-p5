@@ -1,6 +1,7 @@
 """ Get Vehicle """
 import json
 from pydantic import ValidationError
+from sqlalchemy.orm.exc import NoResultFound
 
 from vehicle.application.services.vehicle_service import VehicleService
 from vehicle.adapters.repositories.vehicle_repository_adapter import VehicleRepositoryAdapter
@@ -35,6 +36,13 @@ def get_vehicle(event, context):
                 'errors': error.errors(
                     include_url=False
                 )
+            })
+        }
+    except NoResultFound:
+        return {
+            'statusCode': 404,
+            'body': json.dumps({
+                'message': 'Vehicle not found'
             })
         }
     except Exception as error:
