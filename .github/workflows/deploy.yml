@@ -32,13 +32,12 @@ jobs:
       uses: SpicyPizza/create-envfile@v2.0
       with:
         envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        envkey_AUDIENCE_ISSUER_URL: ${{ secrets.AUDIENCE_ISSUER_URL }}
-        envkey_AUDIENCE_CLIENT_ID: ${{ secrets.AUDIENCE_CLIENT_ID }}
         file_name: .env
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        AUDIENCE_ISSUER_URL: ${{ secrets.AUDIENCE_ISSUER_URL }}
-        AUDIENCE_CLIENT_ID: ${{ secrets.AUDIENCE_CLIENT_ID }}
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
 
     - name: Deploy if tests pass
       if: success()
@@ -46,11 +45,13 @@ jobs:
         npm install -g serverless@3.38.0
         npm install -g serverless-dotenv-plugin
         npm install dotenv
-        node -e "require('dotenv').config(); require('child_process').execSync('serverless deploy --verbose', {stdio: 'inherit'})"
+        sls deploy --verbose --param="audienceIssuerUrl=${{ secrets.AUDIENCE_ISSUER_URL }}" --param="audienceClientId=${{ secrets.AUDIENCE_CLIENT_ID }}"
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: us-east-1
+        AUDIENCE_ISSUER_URL: ${{ secrets.AUDIENCE_ISSUER_URL }}
+        AUDIENCE_CLIENT_ID: ${{ secrets.AUDIENCE_CLIENT_ID }}
 
     - name: Clean up .env file
       if: success()
