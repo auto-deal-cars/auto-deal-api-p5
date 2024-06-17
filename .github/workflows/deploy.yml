@@ -31,9 +31,10 @@ jobs:
     - name: Deploy if tests pass
       if: success()
       run: |
-        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-        echo "AUDIENCE_ISSUER_URL=${{ secrets.AUDIENCE_ISSUER_URL }}" >> .env
-        echo "AUDIENCE_CLIENT_ID=${{ secrets.AUDIENCE_CLIENT_ID }}" >> .env
+        touch .env
+        echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+        echo "AUDIENCE_ISSUER_URL=${{ secrets.AUDIENCE_ISSUER_URL }}" > .env
+        echo "AUDIENCE_CLIENT_ID=${{ secrets.AUDIENCE_CLIENT_ID }}" > .env
   
         npm install -g serverless@3.38.0
         npm install -g serverless-dotenv-plugin
