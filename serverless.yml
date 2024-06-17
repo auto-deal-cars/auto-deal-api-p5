@@ -2,7 +2,6 @@ service: auto-deal
 package:
   individually: true
 frameworkVersion: '3'
-useDotenv: true
 provider:
   name: aws
   ecr:
@@ -13,6 +12,7 @@ provider:
   region: us-east-1
   runtime: python3.10
   timeout: 30
+  deploymentMethod: direct
   httpApi:
     cors: true
     authorizers:
@@ -67,3 +67,5 @@ functions:
           method: get
           authorizer:
             name: autoDealAuthorizer
+plugins:
+  - serverless-dotenv-plugin
