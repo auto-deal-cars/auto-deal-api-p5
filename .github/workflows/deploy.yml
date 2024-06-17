@@ -41,6 +41,14 @@ jobs:
       run: |
         pytest
 
+    - name: Create envfile
+      uses: SpicyPizza/create-envfile@v2.0
+      with:
+        envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        envkey_AUDIENCE_ISSUER_URL: ${{ secrets.AUDIENCE_ISSUER_URL }}
+        envkey_AUDIENCE_CLIENT_ID: ${{ secrets.AUDIENCE_CLIENT_ID }}
+        file_name: .env
+
     - name: Deploy if tests pass
       if: success()
       run: |
