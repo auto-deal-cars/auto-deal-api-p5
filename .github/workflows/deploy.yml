@@ -48,20 +48,21 @@ jobs:
         envkey_AUDIENCE_ISSUER_URL: ${{ secrets.AUDIENCE_ISSUER_URL }}
         envkey_AUDIENCE_CLIENT_ID: ${{ secrets.AUDIENCE_CLIENT_ID }}
         file_name: .env
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        AUDIENCE_ISSUER_URL: ${{ secrets.AUDIENCE_ISSUER_URL }}
+        AUDIENCE_CLIENT_ID: ${{ secrets.AUDIENCE_CLIENT_ID }}
 
     - name: Deploy if tests pass
       if: success()
       run: |
         npm install -g serverless@3.38.0
         npm install -g serverless-dotenv-plugin
-        serverless deploy --verbose
+        dotenv -e .env -- serverless deploy --verbose
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: us-east-1
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        AUDIENCE_ISSUER_URL: ${{ secrets.AUDIENCE_ISSUER_URL }}
-        AUDIENCE_CLIENT_ID: ${{ secrets.AUDIENCE_CLIENT_ID }}
 
     - name: Clean up .env file
       if: success()
