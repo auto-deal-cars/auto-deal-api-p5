@@ -1,5 +1,5 @@
 """Test for VehicleService."""
-from unittest.mock import create_autospec
+from unittest.mock import create_autospec, patch
 import pytest
 
 from vehicle.domain.entities.vehicle import Vehicle
@@ -24,22 +24,24 @@ def vehicle_service(vehicle_repository) -> VehicleService:
 def mocked_vehicle() -> dict:
     """Fixture for mocked vehicle."""
     return {
-        'brand_name': 'Toyota',
-        'model': 'Prius',
-        'year': 2022,
-        'color': 'red',
-        'price': 200000
+        "brand_name": "Toyota",
+        "model": "Prius",
+        "year": 2022,
+        "color": "red",
+        "price": 200000,
+        "sold": None,
     }
 
 @pytest.fixture
 def mocked_vehicle_entity(mocked_vehicle: dict) -> Vehicle:
     """Fixture for mocked vehicle entity."""
     return Vehicle(
-        brand_name=mocked_vehicle.get('brand_name'),
-        model=mocked_vehicle.get('model'),
-        year=mocked_vehicle.get('year'),
-        color=mocked_vehicle.get('color'),
-        price=mocked_vehicle.get('price')
+        brand_name=mocked_vehicle.get("brand_name"),
+        model=mocked_vehicle.get("model"),
+        year=mocked_vehicle.get("year"),
+        color=mocked_vehicle.get("color"),
+        price=mocked_vehicle.get("price"),
+        sold=None
     )
 
 def test_get_vehicle(
@@ -96,3 +98,31 @@ def test_get_all_available(
     vehicle_service.get_all_available()
 
     vehicle_repository.get_all_available.assert_called_once()
+
+def test_get_all_sold(
+        vehicle_repository: VehicleRepository,
+        vehicle_service: VehicleService,
+        mocked_vehicle_entity: Vehicle,
+        mocked_vehicle: dict,
+    ) -> None:
+    """Test for get_all_sold."""
+    vehicle_service.get_all_sold()
+
+    vehicle_repository.get_all_sold.assert_called_once()
+
+def test_initialize_sale(
+        vehicle_repository: VehicleRepository,
+        vehicle_service: VehicleService,
+        mocked_vehicle_entity: Vehicle,
+    ) -> None:
+    """Test for initialize_sale."""
+    with patch.object(
+        vehicle_repository,
+        "get_with_sold",
+        return_value=mocked_vehicle_entity,
+    ):
+        vehicle_service.initialize_sale(22, 1)
+        vehicle_repository.initialize_sale.assert_called_once_with(
+            mocked_vehicle_entity,
+            1
+        )

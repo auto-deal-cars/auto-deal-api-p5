@@ -1,4 +1,4 @@
-""" Get Vehicle """
+""" List Available Vehicles """
 import json
 from pydantic import ValidationError
 
@@ -6,28 +6,22 @@ from vehicle.application.services.vehicle_service import VehicleService
 from vehicle.adapters.repositories.vehicle_repository_adapter import VehicleRepositoryAdapter
 from vehicle.infrastructure.database.setup import get_db
 
-def get_vehicle(event, context):
-    """ Get Vehicle """
+def list_sold_vehicles(event, context):
+    """ List Sold Vehicles """
     try:
-        vehicle_id = event.get('pathParameters', {}).get('id')
-        if not vehicle_id:
-            return {
-                'statusCode': 400,
-                'body': json.dumps({
-                    'message': 'Vehicle ID is required'
-                })
-            }
-
         db = next(get_db())
         repository = VehicleRepositoryAdapter(db)
         service = VehicleService(repository)
-        vehicle = service.get(vehicle_id)
+        vehicles = service.get_all_sold()
+
+        vehicles_dict = [vehicle.model_dump() for vehicle in vehicles]
 
         return {
             'statusCode': 200,
-            'body': json.dumps(vehicle.model_dump()),
+            'body': json.dumps(vehicles_dict),
         }
     except ValidationError as error:
+        print(error)
         return {
             'statusCode': 400,
             'body': json.dumps({
@@ -37,18 +31,11 @@ def get_vehicle(event, context):
                 )
             })
         }
-    except ValueError:
-        return {
-            'statusCode': 404,
-            'body': json.dumps({
-                'message': 'Vehicle not found'
-            })
-        }
     except Exception as error:
         print(error)
         return {
             'statusCode': 500,
             'body': json.dumps({
-                'message': 'An error occurred while getting the vehicle',
+                'message': 'An error occurred while getting the sold vehicles',
             })
         }

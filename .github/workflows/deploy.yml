@@ -36,6 +36,10 @@ jobs:
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
+    - name: Run Alembic migrations
+      run: |
+        alembic upgrade head
+
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
 

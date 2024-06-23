@@ -14,9 +14,11 @@ def list_available_vehicles(event, context):
         service = VehicleService(repository)
         vehicles = service.get_all_available()
 
+        vehicles_dict = [vehicle.model_dump() for vehicle in vehicles]
+
         return {
             'statusCode': 200,
-            'body': json.dumps([vehicle.model_dump() for vehicle in vehicles]),
+            'body': json.dumps(vehicles_dict),
         }
     except ValidationError as error:
         print(error)

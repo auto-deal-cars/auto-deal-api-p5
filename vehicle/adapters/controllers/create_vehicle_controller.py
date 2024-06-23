@@ -15,12 +15,13 @@ def register_vehicle(event, context):
         db = next(get_db())
         repository = VehicleRepositoryAdapter(db)
         service = VehicleService(repository)
-        service.register_vehicle(body)
+        vehicle = service.register_vehicle(body)
 
         return {
             'statusCode': 201,
             'body': json.dumps({
                 'message': 'Vehicle created successfully!',
+                'vehicle': vehicle.model_dump()
             })
         }
     except ValidationError as error:

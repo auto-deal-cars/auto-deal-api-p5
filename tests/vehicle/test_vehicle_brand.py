@@ -8,6 +8,7 @@ from vehicle.domain.entities.vehicle_brand import VehicleBrand
 def vehicle_brand() -> VehicleBrand:
     """Create a VehicleBrand entity."""
     return VehicleBrand(
+        id=1,
         name="Test Brand",
         created_at=datetime.now(),
         updated_at=datetime.now(),
@@ -15,6 +16,7 @@ def vehicle_brand() -> VehicleBrand:
 
 def test_vehicle_brand(vehicle_brand: VehicleBrand) -> None:
     """Test the VehicleBrand entity."""
+    assert vehicle_brand.id == 1
     assert vehicle_brand.name == "Test Brand"
 
 def test_vehicle_invalid_name(vehicle_brand: VehicleBrand) -> None:

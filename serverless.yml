@@ -17,7 +17,7 @@ provider:
   stage: dev
   region: us-east-1
   runtime: python3.10
-  timeout: 30
+  timeout: 900
   deploymentMethod: direct
   environment:
     DATABASE_URL: ${env.DATABASE_URL}
@@ -71,6 +71,46 @@ functions:
       - httpApi:
           path: /vehicles
           method: get
+          authorizer:
+            name: autoDealAuthorizer
+  list_sold_vehicles:
+    image:
+      name: vehicle
+      command: ["vehicle.adapters.controllers.list_sold_vehicles_controller.list_sold_vehicles"]
+    events:
+      - httpApi:
+          path: /vehicles/sold
+          method: get
+          authorizer:
+            name: autoDealAuthorizer
+  initialize_sale:
+    image:
+      name: vehicle
+      command: ["vehicle.adapters.controllers.initialize_sale_controller.initialize_sale"]
+    events:
+      - httpApi:
+          path: /vehicle/{id}/initialize-sale
+          method: post
+          authorizer:
+            name: autoDealAuthorizer
+  confirm_sale:
+    image:
+      name: vehicle
+      command: ["vehicle.adapters.controllers.confirm_sale_controller.confirm_sale"]
+    events:
+      - httpApi:
+          path: /vehicle/{id}/confirm-sale
+          method: put
+          authorizer:
+            name: autoDealAuthorizer
+  revert_sale:
+    image:
+      name: vehicle
+      command: ["vehicle.adapters.controllers.revert_sale_controller.revert_sale"]
+    events:
+      - httpApi:
+          path: /vehicle/{id}/revert-sale
+          method: delete
           authorizer:
             name: autoDealAuthorizer
 plugins:

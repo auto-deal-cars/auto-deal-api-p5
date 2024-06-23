@@ -6,6 +6,7 @@ from vehicle.domain.entities.vehicle import Vehicle
 def vehicle() -> Vehicle:
     """Create a Vehicle entity."""
     return Vehicle(
+        id=1,
         brand_name="Test Brand",
         model="Test Model",
         year=2021,
@@ -15,6 +16,7 @@ def vehicle() -> Vehicle:
 
 def test_vehicle(vehicle: Vehicle) -> None:
     """Test the Vehicle entity."""
+    assert vehicle.id == 1
     assert vehicle.brand_name == "Test Brand"
     assert vehicle.model == "Test Model"
     assert vehicle.year == 2021
