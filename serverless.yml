@@ -41,6 +41,7 @@ functions:
       - httpApi:
           path: /vehicle
           method: post
+          documentation: ${file(serverless.doc.yml):endpoints.create_vehicle}
           authorizer:
             name: autoDealAuthorizer
   update_vehicle:
@@ -51,6 +52,7 @@ functions:
       - httpApi:
           path: /vehicle/{id}
           method: put
+          documentation: ${file(serverless.doc.yml):endpoints.update_vehicle}
           authorizer:
             name: autoDealAuthorizer
   get_vehicle:
@@ -61,6 +63,7 @@ functions:
       - httpApi:
           path: /vehicle/{id}
           method: get
+          documentation: ${file(serverless.doc.yml):endpoints.get_vehicle}
           authorizer:
             name: autoDealAuthorizer
   list_available_vehicles:
@@ -71,6 +74,7 @@ functions:
       - httpApi:
           path: /vehicles
           method: get
+          documentation: ${file(serverless.doc.yml):endpoints.list_available_vehicles}
           authorizer:
             name: autoDealAuthorizer
   list_sold_vehicles:
@@ -81,6 +85,7 @@ functions:
       - httpApi:
           path: /vehicles/sold
           method: get
+          documentation: ${file(serverless.doc.yml):endpoints.list_sold_vehicles}
           authorizer:
             name: autoDealAuthorizer
   initialize_sale:
@@ -91,6 +96,7 @@ functions:
       - httpApi:
           path: /vehicle/{id}/initialize-sale
           method: post
+          documentation: ${file(serverless.doc.yml):endpoints.initialize_sale}
           authorizer:
             name: autoDealAuthorizer
   confirm_sale:
@@ -101,6 +107,7 @@ functions:
       - httpApi:
           path: /vehicle/{id}/confirm-sale
           method: put
+          documentation: ${file(serverless.doc.yml):endpoints.confirm_sale}
           authorizer:
             name: autoDealAuthorizer
   revert_sale:
@@ -111,7 +118,14 @@ functions:
       - httpApi:
           path: /vehicle/{id}/revert-sale
           method: delete
+          documentation: ${file(serverless.doc.yml):endpoints.revert_sale}
           authorizer:
             name: autoDealAuthorizer
 plugins:
   - serverless-dotenv-plugin
+  - serverless-openapi-documenter
+
+configValidationMode: warn
+
+custom:
+  documentation: ${file(serverless.doc.yml):documentation}

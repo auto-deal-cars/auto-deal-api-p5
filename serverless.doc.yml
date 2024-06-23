@@ -1,0 +1,213 @@
+documentation:
+  version: '1'
+  title: 'Auto Deal API'
+  description: 'API documentation for the Auto Deal service'
+  securitySchemes:
+    my_authentication:
+      type: http
+      scheme: bearer
+      bearerFormat: http
+  security:
+    - my_authentication: []
+  models:
+  - name: "SuccessVehicleResponse"
+    description: "Success response for a vehicle creation/update"
+    contentType: "application/json"
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+        brand_name:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+        color:
+          type: string
+        price:
+          type: number
+
+  - name: "ErrorResponse"
+    description: "This is an error"
+    contentType: "application/json"
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+        statusCode:
+          type: integer
+
+endpoints:
+  create_vehicle:
+    summary: "Create a vehicle"
+    description: "Endpoint to create a new vehicle"
+    methodResponses:
+      - statusCode: 201
+        responseBody:
+          description: "Vehicle created successfully"
+        responseModels:
+          application/json: "SuccessVehicleResponse"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  update_vehicle:
+    summary: "Update a vehicle"
+    description: "Endpoint to update an existing vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Vehicle updated successfully"
+        responseModels:
+          application/json: "SuccessVehicleResponse"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  get_vehicle:
+    summary: "Get a vehicle"
+    description: "Endpoint to get details of a vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Vehicle details retrieved successfully"
+        responseModels:
+          application/json: "SuccessVehicleResponse"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  list_available_vehicles:
+    summary: "List available vehicles"
+    description: "Endpoint to list all available vehicles"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "List of available vehicles retrieved successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  list_sold_vehicles:
+    summary: "List sold vehicles"
+    description: "Endpoint to list all sold vehicles"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "List of sold vehicles retrieved successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  initialize_sale:
+    summary: "Initialize a sale"
+    description: "Endpoint to initialize a sale for a vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Sale initialized successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  confirm_sale:
+    summary: "Confirm a sale"
+    description: "Endpoint to confirm a sale for a vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Sale confirmed successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  revert_sale:
+    summary: "Revert a sale"
+    description: "Endpoint to revert a sale for a vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Sale reverted successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"

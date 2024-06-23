@@ -2,7 +2,6 @@
 from typing import Optional
 from pydantic import BaseModel, Field
 
-
 class VehicleSold(BaseModel):
     """Vehicle sold entity"""
     order_id: Optional[int] = Field(default=None, description="Order id")

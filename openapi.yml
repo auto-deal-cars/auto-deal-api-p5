@@ -1,0 +1,265 @@
+openapi: 3.0.3
+components:
+  schemas:
+    SuccessVehicleResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        brand_name:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+        color:
+          type: string
+        price:
+          type: number
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        statusCode:
+          type: integer
+    id:
+      type: integer
+info:
+  title: Auto Deal API
+  description: API documentation for the Auto Deal service
+  version: '1'
+paths:
+  /vehicle:
+    post:
+      summary: Create a vehicle
+      description: Endpoint to create a new vehicle
+      operationId: create_vehicle
+      parameters: []
+      tags: []
+      responses:
+        '201':
+          description: Vehicle created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessVehicleResponse'
+          headers: {}
+        '400':
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+        '500':
+          description: Database errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+  /vehicle/{id}:
+    put:
+      summary: Update a vehicle
+      description: Endpoint to update an existing vehicle
+      operationId: update_vehicle
+      parameters:
+        - name: id
+          in: path
+          description: The vehicle unique identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      tags: []
+      responses:
+        '200':
+          description: Vehicle updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessVehicleResponse'
+          headers: {}
+        '400':
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+        '500':
+          description: Database errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+    get:
+      summary: Get a vehicle
+      description: Endpoint to get details of a vehicle
+      operationId: get_vehicle
+      parameters:
+        - name: id
+          in: path
+          description: The vehicle unique identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      tags: []
+      responses:
+        '200':
+          description: Vehicle details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessVehicleResponse'
+          headers: {}
+        '400':
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+        '500':
+          description: Database errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+  /vehicles:
+    get:
+      summary: List available vehicles
+      description: Endpoint to list all available vehicles
+      operationId: list_available_vehicles
+      parameters: []
+      tags: []
+      responses:
+        '200':
+          description: List of available vehicles retrieved successfully
+          headers: {}
+        '400':
+          description: Validation errors
+          headers: {}
+        '500':
+          description: Database errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+  /vehicles/sold:
+    get:
+      summary: List sold vehicles
+      description: Endpoint to list all sold vehicles
+      operationId: list_sold_vehicles
+      parameters: []
+      tags: []
+      responses:
+        '200':
+          description: List of sold vehicles retrieved successfully
+          headers: {}
+        '400':
+          description: Validation errors
+          headers: {}
+        '500':
+          description: Database errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+  /vehicle/{id}/initialize-sale:
+    post:
+      summary: Initialize a sale
+      description: Endpoint to initialize a sale for a vehicle
+      operationId: initialize_sale
+      parameters:
+        - name: id
+          in: path
+          description: The vehicle unique identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      tags: []
+      responses:
+        '200':
+          description: Sale initialized successfully
+          headers: {}
+        '400':
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+        '500':
+          description: Database errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+  /vehicle/{id}/confirm-sale:
+    put:
+      summary: Confirm a sale
+      description: Endpoint to confirm a sale for a vehicle
+      operationId: confirm_sale
+      parameters:
+        - name: id
+          in: path
+          description: The vehicle unique identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      tags: []
+      responses:
+        '200':
+          description: Sale confirmed successfully
+          headers: {}
+        '400':
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+        '500':
+          description: Database errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+  /vehicle/{id}/revert-sale:
+    delete:
+      summary: Revert a sale
+      description: Endpoint to revert a sale for a vehicle
+      operationId: revert_sale
+      parameters:
+        - name: id
+          in: path
+          description: The vehicle unique identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      tags: []
+      responses:
+        '200':
+          description: Sale reverted successfully
+          headers: {}
+        '400':
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+        '500':
+          description: Database errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
