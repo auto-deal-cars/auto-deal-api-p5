@@ -70,7 +70,10 @@ class VehicleService:
         """ Revert a sale for a Vehicle """
         vehicle = self.vehicle_repository.get_with_sold(vehicle_id)
 
-        if vehicle.sold is None or vehicle.sold.status == StatusEnum.sold:
-            raise ValueError("Vehicle sale not initialized or already sold")
+        if vehicle.sold is None:
+            raise ValueError("Vehicle sale not initialized")
+
+        if vehicle.sold.status == StatusEnum.sold:
+            raise ValueError("Vehicle already sold")
 
         self.vehicle_repository.revert_sale(vehicle)

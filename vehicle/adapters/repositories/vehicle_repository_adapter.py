@@ -207,8 +207,5 @@ class VehicleRepositoryAdapter(VehicleRepository):
             .filter(VehicleSold.vehicle_id == vehicle.id) \
             .first()
 
-        if vehicle_sold is None or vehicle_sold.status != "sold":
-            raise ValueError(f"Error while reverting sale for vehicle {vehicle.id}")
-
         self.db.delete(vehicle_sold)
         self.db.commit()
