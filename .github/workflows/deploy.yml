@@ -49,7 +49,10 @@ jobs:
         npm install -g serverless@3.38.0
         npm install -g serverless-dotenv-plugin
         npm install dotenv
-        sls deploy --verbose --param="audienceIssuerUrl=${{ secrets.AUDIENCE_ISSUER_URL }}" --param="audienceClientId=${{ secrets.AUDIENCE_CLIENT_ID }}"
+        sls deploy --verbose \
+        --param="audienceIssuerUrl=${{ secrets.AUDIENCE_ISSUER_URL }}" \
+        --param="audienceClientId=${{ secrets.AUDIENCE_CLIENT_ID }}" \
+        --param="initializePaymentQueueUrl=${{ secrets.INITIALIZE_PAYMENT_QUEUE_URL }}"
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
