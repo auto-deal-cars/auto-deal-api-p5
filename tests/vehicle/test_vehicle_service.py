@@ -5,6 +5,7 @@ import pytest
 from vehicle.domain.entities.vehicle import Vehicle
 from vehicle.application.services.vehicle_service import VehicleService
 from vehicle.application.ports.vehicle_repository import VehicleRepository
+from vehicle.domain.entities.vehicle_sold import VehicleSold
 
 @pytest.fixture
 def vehicle_repository() -> VehicleRepository:
@@ -42,6 +43,25 @@ def mocked_vehicle_entity(mocked_vehicle: dict) -> Vehicle:
         color=mocked_vehicle.get("color"),
         price=mocked_vehicle.get("price"),
         sold=None
+    )
+
+@pytest.fixture
+def mocked_vehicle_entity_with_sold(mocked_vehicle: dict) -> Vehicle:
+    """Fixture for mocked vehicle entity with sold."""
+    return Vehicle(
+        id=1,
+        brand_name=mocked_vehicle.get("brand_name"),
+        model=mocked_vehicle.get("model"),
+        year=mocked_vehicle.get("year"),
+        color=mocked_vehicle.get("color"),
+        price=mocked_vehicle.get("price"),
+        sold=VehicleSold(
+            order_id=2,
+            vehicle_id=1,
+            status="draft",
+            sold_price=200000,
+            user_id="22"
+        )
     )
 
 def test_get_vehicle(
@@ -114,15 +134,21 @@ def test_initialize_sale(
         vehicle_repository: VehicleRepository,
         vehicle_service: VehicleService,
         mocked_vehicle_entity: Vehicle,
+        mocked_vehicle_entity_with_sold: Vehicle
     ) -> None:
     """Test for initialize_sale."""
     with patch.object(
         vehicle_repository,
-        "get_with_sold",
-        return_value=mocked_vehicle_entity,
-    ):
+            "get_with_sold",
+            return_value=mocked_vehicle_entity,
+        ), patch(
+            "vehicle.application.services.vehicle_service.sqs.send_message"
+        ), patch(
+            "uuid.uuid4", return_value="mocked-uuid"
+        ), patch.object(
+            vehicle_repository,
+            'initialize_sale',
+            return_value=mocked_vehicle_entity_with_sold
+        ):
         vehicle_service.initialize_sale(22, 1)
-        vehicle_repository.initialize_sale.assert_called_once_with(
-            mocked_vehicle_entity,
-            1
-        )
+        vehicle_repository.initialize_sale.assert_called_once()

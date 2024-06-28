@@ -148,7 +148,7 @@ class VehicleRepositoryAdapter(VehicleRepository):
 
         return vehicles_list
 
-    def initialize_sale(self, vehicle: Vehicle, user_id: str) -> None:
+    def initialize_sale(self, vehicle: Vehicle, user_id: str) -> Vehicle:
         """
         Initialize a sale in the database.
         Marking vehicle as sold and creating a new VehicleSold object.
@@ -167,6 +167,8 @@ class VehicleRepositoryAdapter(VehicleRepository):
 
         self.db.commit()
         self.db.refresh(vehicle)
+
+        return vehicle
 
     def confirm_sale(self, vehicle: Vehicle) -> None:
         """

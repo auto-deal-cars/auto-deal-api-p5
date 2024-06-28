@@ -7,6 +7,7 @@ params:
   default:
     audienceIssuerUrl: ${env.AUDIENCE_ISSUER_URL}
     audienceClientId: ${env.AUDIENCE_CLIENT_ID}
+    initializePaymentQueueUrl: ${env.INITIALIZE_PAYMENT_QUEUE_URL}
 provider:
   name: aws
   ecr:
@@ -19,10 +20,20 @@ provider:
   runtime: python3.10
   timeout: 900
   deploymentMethod: direct
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+          Resource:
+            - ${param:initializePaymentQueueUrl}
   environment:
     DATABASE_URL: ${env.DATABASE_URL}
     AUDIENCE_ISSUER_URL: ${env.AUDIENCE_ISSUER_URL}
     AUDIENCE_CLIENT_ID: ${env.AUDIENCE_CLIENT_ID}
+    INITIALIZE_PAYMENT_QUEUE_URL: ${env.INITIALIZE_PAYMENT_QUEUE_URL}
+    INITIALIZE_PAYMENT_QUEUE_ARN: ${env.INITIALIZE_PAYMENT_QUEUE_ARN}
   httpApi:
     cors: true
     authorizers:
@@ -104,26 +115,36 @@ functions:
       name: vehicle
       command: ["vehicle.adapters.controllers.confirm_sale_controller.confirm_sale"]
     events:
-      - httpApi:
-          path: /vehicle/{id}/confirm-sale
-          method: put
-          documentation: ${file(serverless.doc.yml):endpoints.confirm_sale}
-          authorizer:
-            name: autoDealAuthorizer
+      - sqs:
+          arn:
+            Fn::GetAtt: ["SuccessPaymentQueue", "Arn"]
   revert_sale:
     image:
       name: vehicle
       command: ["vehicle.adapters.controllers.revert_sale_controller.revert_sale"]
     events:
-      - httpApi:
-          path: /vehicle/{id}/revert-sale
-          method: delete
-          documentation: ${file(serverless.doc.yml):endpoints.revert_sale}
-          authorizer:
-            name: autoDealAuthorizer
+      - sqs:
+          arn:
+            Fn::GetAtt: ["FailedPaymentQueue", "Arn"]
+
 plugins:
   - serverless-dotenv-plugin
   - serverless-openapi-documenter
+
+resources:
+  Resources:
+    SuccessPaymentQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: success-payment-queue
+        VisibilityTimeout: 30
+        MessageRetentionPeriod: 300
+    FailedPaymentQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: failed-payment-queue
+        VisibilityTimeout: 30
+        MessageRetentionPeriod: 300
 
 configValidationMode: warn
 

@@ -25,12 +25,13 @@ def initialize_sale(event, context):
         db = next(get_db())
         repository = VehicleRepositoryAdapter(db)
         service = VehicleService(repository)
-        service.initialize_sale(vehicle_id, user_id)
+        idempotency_key = service.initialize_sale(vehicle_id, user_id)
 
         return {
             'statusCode': 201,
             'body': json.dumps({
                 'message': 'Initialized sale successfully!',
+                'idempotency_key': idempotency_key
             })
         }
     except ValidationError as error:

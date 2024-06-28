@@ -1,10 +1,18 @@
 """ This module contains the service for the vehicle application """
 from typing import List
+import json
+import uuid
+import os
+import boto3
+
 from sqlalchemy.orm.exc import NoResultFound
 
 from vehicle.domain.entities.vehicle import Vehicle
 from vehicle.application.ports.vehicle_repository import VehicleRepository
 from vehicle.infrastructure.database.models import StatusEnum
+
+sqs = boto3.client("sqs", region_name="us-east-1")
+initialize_payment_queue_url = os.getenv("INITIALIZE_PAYMENT_QUEUE_URL")
 
 class VehicleService:
     """ This class contains the service for the vehicle application """
@@ -46,14 +54,26 @@ class VehicleService:
         """ Get all sold Vehicles """
         return self.vehicle_repository.get_all_sold()
 
-    def initialize_sale(self, vehicle_id: int, user_id: str) -> None:
+    def initialize_sale(self, vehicle_id: int, user_id: str) -> str:
         """ Initialize a sale for a Vehicle """
         vehicle = self.vehicle_repository.get_with_sold(vehicle_id)
 
         if vehicle.sold is not None:
             raise ValueError("Vehicle already sold")
 
-        self.vehicle_repository.initialize_sale(vehicle, user_id)
+        updated_vehicle = self.vehicle_repository.initialize_sale(vehicle, user_id)
+        idempotency_key = str(uuid.uuid4())
+
+        sqs.send_message(
+            QueueUrl=initialize_payment_queue_url,
+            MessageBody=json.dumps({
+                "vehicle_id": updated_vehicle.id,
+                "order_id": updated_vehicle.sold.order_id,
+                "idempotency_key": idempotency_key,
+            }),
+        )
+
+        return idempotency_key
 
     def confirm_sale(self, vehicle_id: int) -> None:
         """ Confirm a sale for a Vehicle """
