@@ -64,12 +64,12 @@ Criação e deploy Lambda functions utilizando containers possui os seguintes be
 - **Segurança**: Containers oferecem um nível adicional de isolamento, ajudando a proteger a aplicação contra vulnerabilidades.
 - **Consistência**: Garantia de que o ambiente de execução é consistente em todas as fases do desenvolvimento, desde a máquina do desenvolvedor até a produção.
 
-> **Sobre o deploy**: A infraestrutura foi configurada utilizando componentes do Serverless Framework, o que facilita o deploy das funções Lambdas. Na pasta raiz do projeto, existe um arquivo chamado `serverless.yml` que contém as configuraçes do deploy. Os containers gerados durante o comando de deploy são enviados para a AWS Lambda através de imagens que são geradas e encaminhadas para o ECR (Elastic Container Registry) da AWS.
+> **Sobre o deploy**: A infraestrutura foi configurada utilizando componentes do Serverless Framework, o que facilita o deploy das funções Lambdas. Na pasta raiz do projeto, existe um arquivo chamado `serverless.yml` que contém as configurações do deploy. Os containers gerados durante o comando de deploy são enviados para a AWS Lambda através de imagens que são geradas e encaminhadas para o ECR (Elastic Container Registry) da AWS.
 
 ### Utilização de arquitetura arm64 nas funções Lambdas
 ![processador AWS Graviton2](./documentation/images/image-2.png)
 
-A arquitetura X86 é a primeira opção quando falamos de computadores e servidores. Porém, os avanços da arquitetura ARM estão cada vez mais presentes. Oferecendo mutios benefícios, como menor custo, maior velocidade e eficiência.
+A arquitetura X86 é a primeira opção quando falamos de computadores e servidores. Porém, os avanços da arquitetura ARM estão cada vez mais presentes. Oferecendo muitos benefícios, como menor custo, maior velocidade e eficiência.
 
 O processador Graviton2 é um processador que foi oferecido pela AWS para a arquitetura ARM. O Graviton2 já provou ter performance impressionante em comparação com processadores da família X86, impulsionando o desempenho dos serviços.
 
@@ -78,7 +78,7 @@ Além disso, utilizar a arquitetura ARM oferece o benefício de reduzir a emiss�
 
 ### Cognito User Pool para autenticação
 
-O serviço de autenticação foi implementado utilizando o Cognito User Pool, que é um serviço da AWS que oferece autenticação e autorização para aplicaçes web. Essa solução foi escolhida por ser uma solução de autenticação que oferece suporte ao OAuth 2.0, o que facilita a implementação de autenticação e autorização em aplicações front-end.
+O serviço de autenticação foi implementado utilizando o Cognito User Pool, que é um serviço da AWS que oferece autenticação e autorização para aplicações web. Essa solução foi escolhida por ser uma solução de autenticação que oferece suporte ao OAuth 2.0, o que facilita a implementação de autenticação e autorização em aplicações front-end.
 
 ### Triggers das Lambdas: API Gateway e SQS Queues
 ![Comunicação](./documentation/images/image.png)
