@@ -9,22 +9,16 @@ from vehicle.infrastructure.database.setup import get_db
 def confirm_sale(event, context):
     """ Confirm a sale for a Vehicle """
     try:
-        vehicle_id = event.get('pathParameters', {}).get('id')
+        body = json.loads(event["Records"][0]["body"])
+        vehicle_id = body["vehicle_id"]
 
         if not vehicle_id:
-            raise KeyError('Vehicle ID and User ID are required')
+            raise KeyError('Vehicle ID are required')
 
         db = next(get_db())
         repository = VehicleRepositoryAdapter(db)
         service = VehicleService(repository)
         service.confirm_sale(vehicle_id)
-
-        return {
-            'statusCode': 200,
-            'body': json.dumps({
-                'message': 'Vehicle confirmed as sold successfully!',
-            })
-        }
     except ValidationError as error:
         return {
             'statusCode': 400,

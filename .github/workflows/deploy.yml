@@ -52,13 +52,14 @@ jobs:
         sls deploy --verbose \
         --param="audienceIssuerUrl=${{ secrets.AUDIENCE_ISSUER_URL }}" \
         --param="audienceClientId=${{ secrets.AUDIENCE_CLIENT_ID }}" \
-        --param="initializePaymentQueueUrl=${{ secrets.INITIALIZE_PAYMENT_QUEUE_URL }}"
+        --param="initializePaymentQueueArn=${{ secrets.INITIALIZE_PAYMENT_QUEUE_ARN }}"
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: us-east-1
         AUDIENCE_ISSUER_URL: ${{ secrets.AUDIENCE_ISSUER_URL }}
         AUDIENCE_CLIENT_ID: ${{ secrets.AUDIENCE_CLIENT_ID }}
+        INITIALIZE_PAYMENT_QUEUE_ARN: ${{ secrets.INITIALIZE_PAYMENT_QUEUE_ARN }}
 
     - name: Clean up .env file
       if: success()

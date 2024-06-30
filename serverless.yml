@@ -7,7 +7,7 @@ params:
   default:
     audienceIssuerUrl: ${env.AUDIENCE_ISSUER_URL}
     audienceClientId: ${env.AUDIENCE_CLIENT_ID}
-    initializePaymentQueueUrl: ${env.INITIALIZE_PAYMENT_QUEUE_URL}
+    initializePaymentQueueArn: ${env.INITIALIZE_PAYMENT_QUEUE_ARN}
 provider:
   name: aws
   ecr:
@@ -18,7 +18,7 @@ provider:
   stage: dev
   region: us-east-1
   runtime: python3.10
-  timeout: 900
+  timeout: 30
   deploymentMethod: direct
   iam:
     role:
@@ -27,7 +27,7 @@ provider:
           Action:
             - sqs:SendMessage
           Resource:
-            - ${param:initializePaymentQueueUrl}
+            - ${param:initializePaymentQueueArn}
   environment:
     DATABASE_URL: ${env.DATABASE_URL}
     AUDIENCE_ISSUER_URL: ${env.AUDIENCE_ISSUER_URL}

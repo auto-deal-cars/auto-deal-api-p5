@@ -44,6 +44,8 @@ endpoints:
   create_vehicle:
     summary: "Create a vehicle"
     description: "Endpoint to create a new vehicle"
+    tags:
+      - name: "Vehicle"
     methodResponses:
       - statusCode: 201
         responseBody:
@@ -64,6 +66,8 @@ endpoints:
   update_vehicle:
     summary: "Update a vehicle"
     description: "Endpoint to update an existing vehicle"
+    tags:
+      - name: "Vehicle"
     pathParams:
       - name: "id"
         description: "The vehicle unique identifier"
@@ -89,6 +93,8 @@ endpoints:
   get_vehicle:
     summary: "Get a vehicle"
     description: "Endpoint to get details of a vehicle"
+    tags:
+      - name: "Vehicle"
     pathParams:
       - name: "id"
         description: "The vehicle unique identifier"
@@ -114,6 +120,8 @@ endpoints:
   list_available_vehicles:
     summary: "List available vehicles"
     description: "Endpoint to list all available vehicles"
+    tags:
+      - name: "Vehicle"
     methodResponses:
       - statusCode: 200
         responseBody:
@@ -130,6 +138,8 @@ endpoints:
   list_sold_vehicles:
     summary: "List sold vehicles"
     description: "Endpoint to list all sold vehicles"
+    tags:
+      - name: "Vehicle"
     methodResponses:
       - statusCode: 200
         responseBody:
@@ -146,6 +156,8 @@ endpoints:
   initialize_sale:
     summary: "Initialize a sale"
     description: "Endpoint to initialize a sale for a vehicle"
+    tags:
+      - name: "Vehicle"
     pathParams:
       - name: "id"
         description: "The vehicle unique identifier"
@@ -155,52 +167,6 @@ endpoints:
       - statusCode: 200
         responseBody:
           description: "Sale initialized successfully"
-      - statusCode: 400
-        responseBody:
-          description: "Validation errors"
-        responseModels:
-          application/json: "ErrorResponse"
-      - statusCode: 500
-        responseBody:
-          description: "Database errors"
-        responseModels:
-          application/json: "ErrorResponse"
-
-  confirm_sale:
-    summary: "Confirm a sale"
-    description: "Endpoint to confirm a sale for a vehicle"
-    pathParams:
-      - name: "id"
-        description: "The vehicle unique identifier"
-        schema:
-          type: "integer"
-    methodResponses:
-      - statusCode: 200
-        responseBody:
-          description: "Sale confirmed successfully"
-      - statusCode: 400
-        responseBody:
-          description: "Validation errors"
-        responseModels:
-          application/json: "ErrorResponse"
-      - statusCode: 500
-        responseBody:
-          description: "Database errors"
-        responseModels:
-          application/json: "ErrorResponse"
-
-  revert_sale:
-    summary: "Revert a sale"
-    description: "Endpoint to revert a sale for a vehicle"
-    pathParams:
-      - name: "id"
-        description: "The vehicle unique identifier"
-        schema:
-          type: "integer"
-    methodResponses:
-      - statusCode: 200
-        responseBody:
-          description: "Sale reverted successfully"
       - statusCode: 400
         responseBody:
           description: "Validation errors"

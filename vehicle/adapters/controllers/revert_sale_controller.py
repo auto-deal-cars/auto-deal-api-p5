@@ -9,7 +9,8 @@ from vehicle.infrastructure.database.setup import get_db
 def revert_sale(event, context):
     """ Revert a sale for a Vehicle """
     try:
-        vehicle_id = event.get('pathParameters', {}).get('id')
+        body = json.loads(event["Records"][0]["body"])
+        vehicle_id = body["vehicle_id"]
         if not vehicle_id:
             raise KeyError('Vehicle ID is required')
 
@@ -17,13 +18,6 @@ def revert_sale(event, context):
         repository = VehicleRepositoryAdapter(db)
         service = VehicleService(repository)
         service.revert_sale(vehicle_id)
-
-        return {
-            'statusCode': 200,
-            'body': json.dumps({
-                'message': 'Reverted sale successfully!',
-            })
-        }
     except ValidationError as error:
         return {
             'statusCode': 400,

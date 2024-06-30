@@ -1,6 +1,6 @@
 [![Deploy CD](https://github.com/auto-deal-cars/auto-deal-api/actions/workflows/deploy.yml/badge.svg)](https://github.com/auto-deal-cars/auto-deal-api/actions/workflows/deploy.yml)
 
-# AutoDeal API - Uma solução AWS Lambda Docker
+# AutoDeal API - Uma solução AWS Lambda com Docker
 
 Aluno:
 
@@ -9,7 +9,6 @@ Aluno:
 ## Lista de Repositórios:
   - [Repositório AutoDeal API](https://github.com/auto-deal-cars/auto-deal-api)
   - [Repositório AutoDeal Payment](https://github.com/auto-deal-cars/auto-deal-payment)
-  - [Repositório AutoDeal DB](https://github.com/auto-deal-cars/auto-deal-db)
 
 ## O Projeto
 
@@ -26,6 +25,25 @@ negócio:
 Este projeto foi gerado com o template `aws-python-docker` do [Serverless framework](https://www.serverless.com/).
 
 Para mais detalhes, por favor, referir para a [documentação](https://www.serverless.com/framework/docs/providers/aws/).
+
+## Stack do Projeto
+
+- **AWS Lambda:** Funções que rodam a partir de eventos gerados, podendo ser invocadas através de uma API Gateway ou SQS Queue
+- **AWS API Gateway:** Criação de API endpoints para a aplicação.
+- **AWS SQS:** Criação de filas do SQS para a comunicação entre os serviços.
+- **AWS DynamoDB:** Banco de dados NoSQL da AWS que armazena os dados de pagamento da aplicação.
+- **AWS RDS:** Banco de dados relacional da AWS que armazena os dados da aplicação.
+- **AWS Cognito:** Serviço de autenticação da AWS que armazena os dados do usuário.
+- **AWS Elastic Container Registry:** Registro de imagens do Docker da AWS.
+- **AWS S3:** Bucket da AWS que armazena os arquivos estáticos da aplicação.
+- **Python:** Linguagem de programação utilizada para a criação das funções Lambdas.
+- **Docker:** Tecnologia de containerização utilizada para o build das imagens das funções Lambdas.
+- **Serverless Framework:** Framework utilizado para o deploy das funções Lambdas. Responsável por transformar o serverless.yml em um template do CloudFormation.
+- **Pydantic:** Biblioteca utilizada para a criação de modelos de dados para a aplicação.
+- **SQLAlchemy:** Biblioteca utilizada para a criação do ORM (Object Relational Mapping) para a aplicação.
+- **Boto3:** Biblioteca utilizada para a criação do cliente da AWS. Utilizado para chamar as filas.
+- **Pytest:** Framework utilizado para o testes da aplicação.
+- **Swagger:** Documentação da API.
 
 ## Infraestrutura
 
@@ -86,6 +104,14 @@ A pipeline para deploy do código foi configurada utilizando o GitHub Actions, a
 - **Clean up .env file**: Remove o arquivo `.env` após o deploy ser realizado com sucesso.
 
 > **Sobre a utilização do QEMU**: O Github Actions não suporta a emulação da arquitetura ARM nativamente, porém, o QEMU permite a emulação da arquitetura ARM para construir a imagem Docker.
+
+### Regras gerais para utilização
+
+- **Branches**: As branchs do projeto devem seguir o padrão `feature_<nome-da-feature>` para novas features, e `fix_<nome-do-bug>` para correções de bugs.
+- **Commits**: Os commits do projeto devem seguir o padrão `<tipo>: <descrição>`. Os tipos possíveis são: `feat`, `fix`, `perf`, `docs`, `style`, `refactor`, `test`, `chore`, `ci`, `build`, `revert`.
+- **Pull Requests**: Código só pode ser mergeado para a branch `main` através de pull requests.
+- **CI/CD**: A aplicação possui CI/CD através do GitHub Actions, onde o código é buildado e deployado para a AWS Lambda através do Serverless Framework.
+- **Documentação das APIs**: A documentação do projeto foi feita utilizando o Swagger, e está disponível na raiz do projeto, no arquivo `openapi.yml`. Para rodar localmente, utilize o comando `swagger-ui-express --config openapi.yml --port 8080`.
 
 ## Arquitetura
 ![Arquitetura da aplicação](./documentation/images/image-4.png)
@@ -165,11 +191,64 @@ Abaixo, está a estrutura do modelo de dados do serviço Payment.
 | Coluna           | Tipo   | Descrição                                      |
 |------------------|--------|------------------------------------------------|
 | idempotency_key  | String | Chave de idempotência para garantir operações únicas |
-| payment_id       | Number | Identificador único do pagamento               |
+| payment_id       | Number | Identificador único do pagamento gerado pelo Mercado Pago|
 | status           | String | Status do pagamento                            |
 | order_id         | Number | Identificador do pedido                        |
-| external_id      | Number | Identificador externo do pagamento             |
 | vehicle_id       | Number | Identificador do veículo                       |
 | created_at       | String | Data de criação do pagamento                   |
 | updated_at       | String | Data da última atualização do pagamento  
 
+## Rotas
+
+## AutoDeal API
+
+- **POST /payment**: Criação de um pagamento.
+- **GET /payment**: Busca os pagamentos.
+- **GET /payment/{id}**: Busca um pagamento pelo seu ID.
+- **POST /vehicle**: Criação de um veículo.
+- **PUT /vehicle/{id}**: Atualização dos dados de um veículo.
+- **GET /vehicle/{id}**: Busca os dados de um veículo pelo seu ID.
+- **GET /vehicles**: Listagem de veículos disponíveis à venda.
+- **GET /vehicles/sold**: Listagem de veículos vendidos.
+- **POST /vehicle/{id}/initialize-sale**: Inicialização da venda de um veículo.
+
+## AutoDeal Payment
+
+- **POST /webhook**: Recebe notificação de webhook.
+- **GET /payment**: Busca os pagamentos realizados/pendentes.
+
+## Como rodar o projeto
+
+Para rodar este projeto, é recomendado utilizar o ambiente de desenvolvimento da AWS, o projeto precisa de um arquivo `.env` com as variáveis de ambiente necessárias para o funcionamento da aplicação. Utilize o arquivo `.env.example` como referência para criar o arquivo `.env`.
+
+Este projeto requer um mínimo de requisitos para rodar, sendo eles:
+- AWS CLI configurado
+- Node.js
+- NPM
+- Serverless Framework
+- Python
+- Pip
+
+Além disso, alguns serviços da AWS são necessários para o funcionamento da aplicação, como:
+- AWS Lambda (são criados no serverless.yml)
+- AWS API Gateway (são criados no serverless.yml)
+- AWS SQS (São criados no serverless.yml)
+- AWS DynamoDB (São criados no serverless.yml)
+- AWS RDS
+- AWS Cognito
+
+Atenção importante para os params ao rodar o comando `sls deploy`, eles são:
+
+AutoDeal API:
+- `initializePaymentQueueArn` - Arn da fila do SQS que inicializa o pagamento
+- `initializePaymentQueueUrl` - URL da fila do SQS que inicializa o pagamento
+- `audienceIssuerUrl` - URL do issuer do Cognito User Pool
+- `audienceClientId` - ID do client do Cognito User Pool
+
+AutoDeal Payment
+- `failedPaymentQueueArn` - Arn da fila do SQS que armazena as vendas que não concluíram o pagamento
+- `successPaymentQueueUrl` - URL da fila do SQS que armazena as vendas que concluíram o pagamento
+- `audienceIssuerUrl` - URL do issuer do Cognito User Pool
+- `audienceClientId` - ID do client do Cognito User Pool
+
+Após clonar o repositório, utilize o comando `npm install` para instalar as dependências do projeto, e `sls deploy` para rodar o projeto, sem esquecer de passar os params no comando.
