@@ -136,15 +136,19 @@ resources:
     SuccessPaymentQueue:
       Type: AWS::SQS::Queue
       Properties:
-        QueueName: success-payment-queue
+        QueueName: success-payment-queue.fifo
         VisibilityTimeout: 30
         MessageRetentionPeriod: 300
+        FifoQueue: true
+        ContentBasedDeduplication: true
     FailedPaymentQueue:
       Type: AWS::SQS::Queue
       Properties:
-        QueueName: failed-payment-queue
+        QueueName: failed-payment-queue.fifo
         VisibilityTimeout: 30
         MessageRetentionPeriod: 300
+        FifoQueue: true
+        ContentBasedDeduplication: true
 
 configValidationMode: warn
 
