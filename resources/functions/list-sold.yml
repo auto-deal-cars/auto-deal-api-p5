@@ -1,0 +1,10 @@
+image:
+  name: vehicle
+  command: ["vehicle.adapters.controllers.list_sold_vehicles_controller.list_sold_vehicles"]
+events:
+  - httpApi:
+      path: /vehicles/sold
+      method: get
+      documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.list_sold_vehicles}
+      authorizer:
+        name: autoDealAuthorizer

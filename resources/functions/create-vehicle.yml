@@ -1,0 +1,9 @@
+image:
+  name: vehicle
+events:
+  - httpApi:
+      path: /vehicle
+      method: post
+      documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.create_vehicle}
+      authorizer:
+        name: autoDealAuthorizer

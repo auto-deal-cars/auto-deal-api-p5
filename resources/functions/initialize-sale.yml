@@ -1,0 +1,10 @@
+image:
+  name: vehicle
+  command: ["vehicle.adapters.controllers.initialize_sale_controller.initialize_sale"]
+events:
+  - httpApi:
+      path: /vehicle/{id}/initialize-sale
+      method: post
+      documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.initialize_sale}
+      authorizer:
+        name: autoDealAuthorizer

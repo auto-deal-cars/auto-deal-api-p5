@@ -8,5 +8,9 @@ env
 node_modules
 package-lock.json
 .coverage
+env.json
+postman.json
+openapi.json
+openapi.yml
 
 __pycache__

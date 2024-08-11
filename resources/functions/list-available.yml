@@ -1,0 +1,10 @@
+image:
+  name: vehicle
+  command: ["vehicle.adapters.controllers.list_available_vehicles_controller.list_available_vehicles"]
+events:
+  - httpApi:
+      path: /vehicles
+      method: get
+      documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.list_available_vehicles}
+      authorizer:
+        name: autoDealAuthorizer

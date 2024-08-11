@@ -19,29 +19,29 @@ documentation:
   - name: "CreateVehicleRequest"
     description: "Request to create a vehicle"
     contentType: "application/json"
-    schema: ${file:(documentation/openapi/schemas/create-vehicle-request.yml)}
+    schema: ${file(documentation/openapi/schemas/create-vehicle-request.yml)}
 
   - name: "UpdateVehicleRequest"
     description: "Request to update a vehicle"
     contentType: "application/json"
-    schema: ${file:(documentation/openapi/schemas/update-vehicle-request.yml)}
+    schema: ${file(documentation/openapi/schemas/update-vehicle-request.yml)}
 
   - name: "SuccessVehicleResponse"
     description: "Success response for a vehicle creation/update"
     contentType: "application/json"
     schema:
       type: object
-      properties: ${file:(documentation/openapi/schemas/success-vehicle-response.yml)}
+      properties: ${file(documentation/openapi/schemas/success-vehicle-response.yml)}
 
   - name: "ErrorResponse"
     description: "This is an error"
     contentType: "application/json"
-    schema: ${file:(documentation/openapi/schemas/error-response.yml)}
+    schema: ${file(documentation/openapi/schemas/error-response.yml)}
   
   - name: "UpdateVehicleResponse"
     description: "Response for a vehicle update"
     contentType: "application/json"
-    schema: ${file:(documentation/openapi/schemas/update-vehicle-response.yml)}
+    schema: ${file(documentation/openapi/schemas/update-vehicle-response.yml)}
 
 endpoints:
   create_vehicle:

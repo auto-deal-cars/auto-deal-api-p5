@@ -1,0 +1,7 @@
+Type: AWS::SQS::Queue
+Properties:
+  QueueName: success-payment-queue.fifo
+  VisibilityTimeout: 30
+  MessageRetentionPeriod: 300
+  FifoQueue: true
+  ContentBasedDeduplication: true

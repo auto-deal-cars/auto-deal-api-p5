@@ -1,0 +1,11 @@
+Type: AWS::RDS::DBInstance
+Properties:
+  Engine: postgres
+  EngineVersion: 16.3
+  DBInstanceClass: db.t3.micro
+  DBName: ${self:custom.dbName}
+  MasterUsername: ${self:custom.dbUsername}
+  MasterUserPassword: ${self:custom.dbPassword}
+  AllocatedStorage: 20
+  DBInstanceIdentifier: ${self:custom.dbName}-db-instance
+  PubliclyAccessible: true
