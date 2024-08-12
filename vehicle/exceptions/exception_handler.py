@@ -13,6 +13,7 @@ from vehicle.exceptions.vehicle_exceptions import (
     VehicleAlreadySoldError,
     VehicleNotFoundError,
     VehicleSaleNotInitializedError,
+    VehicleAlreadyPickedUpError,
 )
 
 def event_exception_handlers(logger: Logger):
@@ -38,6 +39,8 @@ def event_exception_handlers(logger: Logger):
                 logger.error(f"Vehicle sale not initialized error: {error}")
             except VehicleAlreadySoldError as error:
                 logger.error(f"Vehicle already sold error: {error}")
+            except VehicleAlreadyPickedUpError as error:
+                logger.error(f"Vehicle already picked up error: {error}")
             except CustomDatabaseException as error:
                 logger.error(f"Custom database exception: {error}")
             except KeyError as error:
@@ -96,6 +99,14 @@ def http_exception_handler(func: Callable):
                 })
             }
         except CustomNotFoundException as error:
+            return {
+                'statusCode': error.status_code,
+                'body': json.dumps({
+                    'message': error.message,
+                    'error': str(error)
+                })
+            }
+        except VehicleAlreadyPickedUpError as error:
             return {
                 'statusCode': error.status_code,
                 'body': json.dumps({

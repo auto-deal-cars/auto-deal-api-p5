@@ -175,9 +175,18 @@ class VehicleRepositoryAdapter(VehicleRepository):
         Confirm a sale for a vehicle in the database.
         """
         self.db.query(VehicleSold).filter(VehicleSold.vehicle_id == vehicle.id).update({
-            'status': 'sold',
+            'status': 'awaiting_pickup',
             'sold_price': vehicle.price,
             'sold_date': datetime.now(),
+        })
+        self.db.commit()
+
+    def confirm_pickup(self, vehicle: Vehicle) -> None:
+        """
+        Confirm a pickup for a vehicle in the database.
+        """
+        self.db.query(VehicleSold).filter(VehicleSold.vehicle_id == vehicle.id).update({
+            'status': 'sold',
         })
         self.db.commit()
 

@@ -10,6 +10,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from vehicle.domain.entities.vehicle import Vehicle
 from vehicle.application.ports.vehicle_repository import VehicleRepository
 from vehicle.exceptions.vehicle_exceptions import (
+    VehicleAlreadyPickedUpError,
     VehicleAlreadySoldError,
     VehicleSaleNotInitializedError
 )
@@ -99,6 +100,24 @@ class VehicleService:
             raise ValueError("Vehicle already sold")
 
         self.vehicle_repository.confirm_sale(vehicle)
+
+    def confirm_pickup(self, vehicle_id: int) -> None:
+        """ Confirm a pickup for a Vehicle """
+        vehicle = self.vehicle_repository.get_with_sold(vehicle_id)
+
+        if vehicle.sold is None:
+            raise VehicleSaleNotInitializedError(
+                message="Vehicle sale not initialized",
+                status_code=400,
+            )
+
+        if vehicle.sold.status != StatusEnum.draft:
+            raise VehicleAlreadyPickedUpError(
+                message="Vehicle already picked up or sale not initialized",
+                status_code=409,
+            )
+
+        self.vehicle_repository.confirm_pickup(vehicle)
 
     def revert_sale(self, vehicle_id: int) -> None:
         """ Revert a sale for a Vehicle """

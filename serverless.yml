@@ -73,6 +73,10 @@ functions:
     ${file(resources/functions/confirm-sale.yml)}
   revert_sale:
     ${file(resources/functions/revert-sale.yml)}
+  cancel_sale:
+    ${file(resources/functions/cancel-sale.yml)}
+  confirm_pickup:
+    ${file(resources/functions/confirm-pickup.yml)}
 
 plugins:
   - serverless-openapi-documenter

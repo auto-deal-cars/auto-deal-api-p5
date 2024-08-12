@@ -41,6 +41,7 @@ class StatusEnum(enum.Enum):
     Represents the possible status of a SOLD vehicle.
     """
     draft = "draft"
+    awaiting_pickup = "awaiting_pickup"
     sold = "sold"
 
 class VehicleSold(Base):

@@ -52,3 +52,9 @@ class VehicleSaleNotInitializedError(CustomException):
     Vehicle Sale Not Initialized Error
     """
     pass
+
+class VehicleAlreadyPickedUpError(CustomException):
+    """
+    Vehicle Already Picked Up Error
+    """
+    pass

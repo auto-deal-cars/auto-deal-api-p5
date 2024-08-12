@@ -1,4 +1,4 @@
-""" Cancel a sale for a Vehicle """
+""" Confirm a pickup for a Vehicle """
 from vehicle.application.services.vehicle_service import VehicleService
 from vehicle.adapters.repositories.vehicle_repository_adapter import VehicleRepositoryAdapter
 from vehicle.exceptions.exception_handler import http_exception_handler
@@ -8,8 +8,8 @@ from vehicle.infrastructure.database.setup import get_db
 
 @http_exception_handler
 @handle_sqlalchemy_exceptions
-def cancel_sale(event, context):
-    """ Cancel a sale for a Vehicle """
+def confirm_pickup(event, context):
+    """ Confirm a pickup for a Vehicle """
     vehicle_id = event.get('pathParameters', {}).get('id')
 
     if not vehicle_id:
@@ -21,4 +21,4 @@ def cancel_sale(event, context):
     db = next(get_db())
     repository = VehicleRepositoryAdapter(db)
     service = VehicleService(repository)
-    service.revert_sale(vehicle_id)
+    service.confirm_pickup(vehicle_id)
