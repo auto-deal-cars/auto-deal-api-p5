@@ -262,4 +262,33 @@ endpoints:
           description: "Database errors"
         responseModels:
           application/json: "ErrorResponse"
-
+  confirm_pickup:
+    summary: "Confirm a pickup"
+    description: "Endpoint to confirm a pickup for a vehicle"
+    tags:
+      - "Vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Sale cancelled successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 401
+        responseBody:
+          description: "Unauthorized"
+      - statusCode: 403
+        responseBody:
+          description: "Not Allowed to cancel a sale"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
