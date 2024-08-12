@@ -63,4 +63,4 @@ jobs:
 
     - name: Clean up .env file
       if: success()
-      run: rm .env
+      run: rm env.json
