@@ -1,6 +1,6 @@
-""" Get Vehicle """
-import json
+""" Cancel a sale for a Vehicle """
 
+import json
 from vehicle.application.services.vehicle_service import VehicleService
 from vehicle.adapters.repositories.vehicle_repository_adapter import VehicleRepositoryAdapter
 from vehicle.exceptions.exception_handler import http_exception_handler
@@ -10,9 +10,11 @@ from vehicle.infrastructure.database.setup import get_db
 
 @http_exception_handler
 @handle_sqlalchemy_exceptions
-def get_vehicle(event, context):
-    """ Get Vehicle """
-    vehicle_id = event.get('pathParameters', {}).get('id')
+def cancel_sale(event, context):
+    """ Cancel a sale for a Vehicle """
+    body = json.loads(event["Records"][0]["body"])
+    vehicle_id = body["vehicle_id"]
+
     if not vehicle_id:
         raise InvalidVehicleIDError(
             message="vehicle_id is required",
@@ -22,9 +24,4 @@ def get_vehicle(event, context):
     db = next(get_db())
     repository = VehicleRepositoryAdapter(db)
     service = VehicleService(repository)
-    vehicle = service.get(vehicle_id)
-
-    return {
-        'statusCode': 200,
-        'body': json.dumps(vehicle.model_dump()),
-    }
+    service.revert_sale(vehicle_id)

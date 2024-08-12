@@ -8,3 +8,4 @@ events:
       documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.initialize_sale}
       authorizer:
         name: autoDealAuthorizer
+        scopes: ["initialize:sale"]

@@ -8,3 +8,4 @@ events:
       documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.get_vehicle}
       authorizer:
         name: autoDealAuthorizer
+        scopes: ["get:vehicle"]

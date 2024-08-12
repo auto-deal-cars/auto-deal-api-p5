@@ -232,3 +232,34 @@ endpoints:
           description: "Database errors"
         responseModels:
           application/json: "ErrorResponse"
+  cancel_sale:
+    summary: "Cancel a sale"
+    description: "Endpoint to cancel a sale for a vehicle"
+    tags:
+      - "Vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Sale cancelled successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 401
+        responseBody:
+          description: "Unauthorized"
+      - statusCode: 403
+        responseBody:
+          description: "Not Allowed to cancel a sale"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+

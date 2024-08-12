@@ -9,6 +9,10 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from vehicle.domain.entities.vehicle import Vehicle
 from vehicle.application.ports.vehicle_repository import VehicleRepository
+from vehicle.exceptions.vehicle_exceptions import (
+    VehicleAlreadySoldError,
+    VehicleSaleNotInitializedError
+)
 from vehicle.infrastructure.database.models import StatusEnum
 
 sqs = boto3.client("sqs", region_name="us-east-1")
@@ -54,12 +58,20 @@ class VehicleService:
         """ Get all sold Vehicles """
         return self.vehicle_repository.get_all_sold()
 
-    def initialize_sale(self, vehicle_id: int, user_id: str) -> str:
+    def initialize_sale(
+            self,
+            vehicle_id: int,
+            user_id: str,
+            access_token: str
+        ) -> str:
         """ Initialize a sale for a Vehicle """
         vehicle = self.vehicle_repository.get_with_sold(vehicle_id)
 
         if vehicle.sold is not None:
-            raise ValueError("Vehicle already sold")
+            raise VehicleAlreadySoldError(
+                message="Vehicle already sold",
+                status_code=409,
+            )
 
         updated_vehicle = self.vehicle_repository.initialize_sale(vehicle, user_id)
         idempotency_key = str(uuid.uuid4())
@@ -70,7 +82,9 @@ class VehicleService:
                 "vehicle_id": updated_vehicle.id,
                 "order_id": updated_vehicle.sold.order_id,
                 "idempotency_key": idempotency_key,
+                "access_token": access_token,
             }),
+            MessageGroupId=str(updated_vehicle.id)
         )
 
         return idempotency_key
@@ -91,9 +105,15 @@ class VehicleService:
         vehicle = self.vehicle_repository.get_with_sold(vehicle_id)
 
         if vehicle.sold is None:
-            raise ValueError("Vehicle sale not initialized")
+            raise VehicleSaleNotInitializedError(
+                message="Vehicle sale not initialized",
+                status_code=400,
+            )
 
         if vehicle.sold.status == StatusEnum.sold:
-            raise ValueError("Vehicle already sold")
+            raise VehicleAlreadySoldError(
+                message="Vehicle already sold",
+                status_code=409,
+            )
 
         self.vehicle_repository.revert_sale(vehicle)

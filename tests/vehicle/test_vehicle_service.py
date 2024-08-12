@@ -150,5 +150,5 @@ def test_initialize_sale(
             'initialize_sale',
             return_value=mocked_vehicle_entity_with_sold
         ):
-        vehicle_service.initialize_sale(22, 1)
+        vehicle_service.initialize_sale(22, 1, 'access_token')
         vehicle_repository.initialize_sale.assert_called_once()
