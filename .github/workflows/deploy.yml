@@ -32,6 +32,9 @@ jobs:
       run: |
         echo '{
           "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
+          "DB_USERNAME": "${{ secrets.DB_USERNAME }}",
+          "DB_PASSWORD": "${{ secrets.DB_PASSWORD }}",
+          "DB_NAME": "${{ secrets.DB_NAME }}",
           "AUDIENCE_ISSUER_URL": "${{ secrets.AUDIENCE_ISSUER_URL }}",
           "AUDIENCE_CLIENT_ID": "${{ secrets.AUDIENCE_CLIENT_ID }}",
           "INITIALIZE_PAYMENT_QUEUE_ARN": "${{ secrets.INITIALIZE_PAYMENT_QUEUE_ARN }}",
