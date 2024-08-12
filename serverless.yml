@@ -1,13 +1,21 @@
-service: auto-deal
+service: auto-deal-api
 package:
   individually: true
 frameworkVersion: '3'
+
 useDotenv: true
-params:
-  default:
-    audienceIssuerUrl: ${env.AUDIENCE_ISSUER_URL}
-    audienceClientId: ${env.AUDIENCE_CLIENT_ID}
-    initializePaymentQueueArn: ${env.INITIALIZE_PAYMENT_QUEUE_ARN}
+
+custom:
+  databaseUrl: ${file(env.json):DATABASE_URL}
+  audienceIssuerUrl: ${file(env.json):AUDIENCE_ISSUER_URL}
+  audienceClientId: ${file(env.json):AUDIENCE_CLIENT_ID}
+  initializePaymentQueueArn: ${file(env.json):INITIALIZE_PAYMENT_QUEUE_ARN}
+  initializePaymentQueueUrl: ${file(env.json):INITIALIZE_PAYMENT_QUEUE_URL}
+  dbUsername: ${file(env.json):DB_USERNAME}
+  dbPassword: ${file(env.json):DB_PASSWORD}
+  dbName: ${file(env.json):DB_NAME}
+  documentation: ${file(documentation/openapi/serverless.doc.yml):documentation}
+
 provider:
   name: aws
   ecr:
@@ -27,130 +35,61 @@ provider:
           Action:
             - sqs:SendMessage
           Resource:
-            - ${param:initializePaymentQueueArn}
+            - ${self:custom.initializePaymentQueueArn}
   environment:
-    DATABASE_URL: ${env.DATABASE_URL}
-    AUDIENCE_ISSUER_URL: ${env.AUDIENCE_ISSUER_URL}
-    AUDIENCE_CLIENT_ID: ${env.AUDIENCE_CLIENT_ID}
-    INITIALIZE_PAYMENT_QUEUE_URL: ${env.INITIALIZE_PAYMENT_QUEUE_URL}
-    INITIALIZE_PAYMENT_QUEUE_ARN: ${env.INITIALIZE_PAYMENT_QUEUE_ARN}
+    DATABASE_URL: ${self:custom.databaseUrl}
+    AUDIENCE_ISSUER_URL: ${self:custom.audienceIssuerUrl}
+    AUDIENCE_CLIENT_ID: ${self:custom.audienceClientId}
+    INITIALIZE_PAYMENT_QUEUE_URL: ${self:custom.initializePaymentQueueUrl}
+    INITIALIZE_PAYMENT_QUEUE_ARN: ${self:custom.initializePaymentQueueArn}
+    DB_USERNAME: ${self:custom.dbUsername}
+    DB_PASSWORD: ${self:custom.dbPassword}
+    DB_NAME: ${self:custom.dbName}
   httpApi:
     cors: true
     authorizers:
       autoDealAuthorizer:
         type: jwt
         identitySource: $request.header.Authorization
-        issuerUrl: ${param:audienceIssuerUrl}
+        issuerUrl: ${self:custom.audienceIssuerUrl}
         audience:
-          - ${param:audienceClientId}
+          - ${self:custom.audienceClientId}
   architecture: arm64
+
 functions:
   create_vehicle:
-    image:
-      name: vehicle
-    events:
-      - httpApi:
-          path: /vehicle
-          method: post
-          documentation: ${file(serverless.doc.yml):endpoints.create_vehicle}
-          authorizer:
-            name: autoDealAuthorizer
+    ${file(resources/functions/create-vehicle.yml)}
   update_vehicle:
-    image:
-      name: vehicle
-      command: ["vehicle.adapters.controllers.update_vehicle_controller.update_vehicle"]
-    events:
-      - httpApi:
-          path: /vehicle/{id}
-          method: put
-          documentation: ${file(serverless.doc.yml):endpoints.update_vehicle}
-          authorizer:
-            name: autoDealAuthorizer
+    ${file(resources/functions/update-vehicle.yml)}
   get_vehicle:
-    image:
-      name: vehicle
-      command: ["vehicle.adapters.controllers.get_vehicle_controller.get_vehicle"]
-    events:
-      - httpApi:
-          path: /vehicle/{id}
-          method: get
-          documentation: ${file(serverless.doc.yml):endpoints.get_vehicle}
-          authorizer:
-            name: autoDealAuthorizer
+    ${file(resources/functions/get-vehicle.yml)}
   list_available_vehicles:
-    image:
-      name: vehicle
-      command: ["vehicle.adapters.controllers.list_available_vehicles_controller.list_available_vehicles"]
-    events:
-      - httpApi:
-          path: /vehicles
-          method: get
-          documentation: ${file(serverless.doc.yml):endpoints.list_available_vehicles}
-          authorizer:
-            name: autoDealAuthorizer
+    ${file(resources/functions/list-available.yml)}
   list_sold_vehicles:
-    image:
-      name: vehicle
-      command: ["vehicle.adapters.controllers.list_sold_vehicles_controller.list_sold_vehicles"]
-    events:
-      - httpApi:
-          path: /vehicles/sold
-          method: get
-          documentation: ${file(serverless.doc.yml):endpoints.list_sold_vehicles}
-          authorizer:
-            name: autoDealAuthorizer
+    ${file(resources/functions/list-sold.yml)}
   initialize_sale:
-    image:
-      name: vehicle
-      command: ["vehicle.adapters.controllers.initialize_sale_controller.initialize_sale"]
-    events:
-      - httpApi:
-          path: /vehicle/{id}/initialize-sale
-          method: post
-          documentation: ${file(serverless.doc.yml):endpoints.initialize_sale}
-          authorizer:
-            name: autoDealAuthorizer
+    ${file(resources/functions/initialize-sale.yml)}
   confirm_sale:
-    image:
-      name: vehicle
-      command: ["vehicle.adapters.controllers.confirm_sale_controller.confirm_sale"]
-    events:
-      - sqs:
-          arn:
-            Fn::GetAtt: ["SuccessPaymentQueue", "Arn"]
+    ${file(resources/functions/confirm-sale.yml)}
   revert_sale:
-    image:
-      name: vehicle
-      command: ["vehicle.adapters.controllers.revert_sale_controller.revert_sale"]
-    events:
-      - sqs:
-          arn:
-            Fn::GetAtt: ["FailedPaymentQueue", "Arn"]
+    ${file(resources/functions/revert-sale.yml)}
+  cancel_sale:
+    ${file(resources/functions/cancel-sale.yml)}
+  confirm_pickup:
+    ${file(resources/functions/confirm-pickup.yml)}
 
 plugins:
-  - serverless-dotenv-plugin
   - serverless-openapi-documenter
 
 resources:
   Resources:
+    #RDS
+    Database:
+      ${file(resources/rds.yml)}
+    #SQS
     SuccessPaymentQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: success-payment-queue.fifo
-        VisibilityTimeout: 30
-        MessageRetentionPeriod: 300
-        FifoQueue: true
-        ContentBasedDeduplication: true
+      ${file(resources/success-payment-queue.yml)}
     FailedPaymentQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: failed-payment-queue.fifo
-        VisibilityTimeout: 30
-        MessageRetentionPeriod: 300
-        FifoQueue: true
-        ContentBasedDeduplication: true
+      ${file(resources/failed-payment-queue.yml)}
 
 configValidationMode: warn
-
-custom:
-  documentation: ${file(serverless.doc.yml):documentation}

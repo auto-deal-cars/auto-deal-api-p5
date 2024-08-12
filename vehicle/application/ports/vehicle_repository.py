@@ -76,6 +76,13 @@ class VehicleRepository(ABC):
         pass
 
     @abstractmethod
+    def confirm_pickup(self, vehicle: Vehicle) -> None:
+        """
+        This method confirms a pickup for a vehicle in the database.
+        """
+        pass
+
+    @abstractmethod
     def get_brand(self, brand_name: str) -> VehicleBrand | None:
         """
         This method gets a brand from the database.

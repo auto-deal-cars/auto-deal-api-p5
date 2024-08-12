@@ -1,0 +1,294 @@
+documentation:
+  version: '1'
+  title: 'Auto Deal API'
+  description: 'API documentation for the Auto Deal service'
+  securitySchemes:
+    my_authentication:
+      type: http
+      scheme: bearer
+      bearerFormat: http
+  security:
+    - my_authentication: []
+  servers:
+  - url: http://localhost/
+    description: Server for local development
+  tags:
+  - name: "Vehicle"
+    description: "Vehicle endpoints"
+  models:
+  - name: "CreateVehicleRequest"
+    description: "Request to create a vehicle"
+    contentType: "application/json"
+    schema: ${file(documentation/openapi/schemas/create-vehicle-request.yml)}
+
+  - name: "UpdateVehicleRequest"
+    description: "Request to update a vehicle"
+    contentType: "application/json"
+    schema: ${file(documentation/openapi/schemas/update-vehicle-request.yml)}
+
+  - name: "SuccessVehicleResponse"
+    description: "Success response for a vehicle creation/update"
+    contentType: "application/json"
+    schema:
+      type: object
+      properties: ${file(documentation/openapi/schemas/success-vehicle-response.yml)}
+
+  - name: "ErrorResponse"
+    description: "This is an error"
+    contentType: "application/json"
+    schema: ${file(documentation/openapi/schemas/error-response.yml)}
+  
+  - name: "UpdateVehicleResponse"
+    description: "Response for a vehicle update"
+    contentType: "application/json"
+    schema: ${file(documentation/openapi/schemas/update-vehicle-response.yml)}
+
+endpoints:
+  create_vehicle:
+    summary: "Create a vehicle"
+    description: "Endpoint to create a new vehicle"
+    tags:
+      - "Vehicle"
+    requestBody:
+      description: "Vehicle creation request"
+    requestModels:
+      application/json: "CreateVehicleRequest"
+    methodResponses:
+      - statusCode: 201
+        responseBody:
+          description: "Vehicle created successfully"
+        responseModels:
+          application/json: "SuccessVehicleResponse"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 401
+        responseBody:
+          description: "Unauthorized"
+      - statusCode: 403
+        responseBody:
+          description: "Not Allowed to create vehicle"
+      - statusCode: 409
+        responseBody:
+          description: "Vehicle already exists"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  update_vehicle:
+    summary: "Update a vehicle"
+    description: "Endpoint to update an existing vehicle"
+    tags:
+      - "Vehicle"
+    requestBody:
+      description: "Vehicle update request"
+    requestModels:
+      application/json: "UpdateVehicleRequest"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Vehicle updated successfully"
+        responseModels:
+          application/json: "UpdateVehicleResponse"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 401
+        responseBody:
+          description: "Unauthorized"
+      - statusCode: 403
+        responseBody:
+          description: "Not Allowed to update vehicle"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  get_vehicle:
+    summary: "Get a vehicle"
+    description: "Endpoint to get details of a vehicle"
+    tags:
+      - "Vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Vehicle details retrieved successfully"
+        responseModels:
+          application/json: "SuccessVehicleResponse"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 401
+        responseBody:
+          description: "Unauthorized"
+      - statusCode: 403
+        responseBody:
+          description: "Not Allowed to get vehicle"
+      - statusCode: 404
+        responseBody:
+          description: "Vehicle not found"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  list_available_vehicles:
+    summary: "List available vehicles"
+    description: "Endpoint to list all available vehicles"
+    tags:
+      - "Vehicle"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "List of available vehicles retrieved successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+      - statusCode: 401
+        responseBody:
+          description: "Unauthorized"
+      - statusCode: 403
+        responseBody:
+          description: "Not Allowed to list available vehicles"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  list_sold_vehicles:
+    summary: "List sold vehicles"
+    description: "Endpoint to list all sold vehicles"
+    tags:
+      - "Vehicle"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "List of sold vehicles retrieved successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+      - statusCode: 401
+        responseBody:
+          description: "Unauthorized"
+      - statusCode: 403
+        responseBody:
+          description: "Not Allowed to list sold vehicles"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+
+  initialize_sale:
+    summary: "Initialize a sale"
+    description: "Endpoint to initialize a sale for a vehicle"
+    tags:
+      - "Vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Sale initialized successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 401
+        responseBody:
+          description: "Unauthorized"
+      - statusCode: 403
+        responseBody:
+          description: "Not Allowed to initialize sale"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+  cancel_sale:
+    summary: "Cancel a sale"
+    description: "Endpoint to cancel a sale for a vehicle"
+    tags:
+      - "Vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Sale cancelled successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 401
+        responseBody:
+          description: "Unauthorized"
+      - statusCode: 403
+        responseBody:
+          description: "Not Allowed to cancel a sale"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"
+  confirm_pickup:
+    summary: "Confirm a pickup"
+    description: "Endpoint to confirm a pickup for a vehicle"
+    tags:
+      - "Vehicle"
+    pathParams:
+      - name: "id"
+        description: "The vehicle unique identifier"
+        schema:
+          type: "integer"
+    methodResponses:
+      - statusCode: 200
+        responseBody:
+          description: "Sale cancelled successfully"
+      - statusCode: 400
+        responseBody:
+          description: "Validation errors"
+        responseModels:
+          application/json: "ErrorResponse"
+      - statusCode: 401
+        responseBody:
+          description: "Unauthorized"
+      - statusCode: 403
+        responseBody:
+          description: "Not Allowed to cancel a sale"
+      - statusCode: 500
+        responseBody:
+          description: "Database errors"
+        responseModels:
+          application/json: "ErrorResponse"

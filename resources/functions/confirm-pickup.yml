@@ -1,0 +1,12 @@
+image:
+  name: vehicle
+  command: ["vehicle.adapters.controllers.confirm_pickup_controller.confirm_pickup"]
+events:
+  - httpApi:
+      path: /vehicle/{id}/confirm-pickup
+      method: post
+      documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.confirm_pickup}
+      authorizer:
+        name: autoDealAuthorizer
+        scopes: ["pick:sale"]
+

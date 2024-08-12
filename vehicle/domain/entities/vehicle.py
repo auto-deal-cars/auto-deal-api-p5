@@ -13,7 +13,6 @@ class Vehicle(BaseModel):
     id: Optional[int] = Field(default=None, description="Vehicle ID")
     brand_name: str = Field(..., min_length=1, max_length=100, description="Brand Name")
     model: str = Field(..., min_length=1, max_length=100, description="Model")
-    quantity: int = Field(..., gt=0, description="Quantity")
     year: int = Field(..., ge=1886, description="Year")
     color: str = Field(..., min_length=1, max_length=50, description="Color")
     price: float = Field(..., gt=0, description="Price")

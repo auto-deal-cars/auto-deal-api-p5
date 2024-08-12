@@ -1,0 +1,11 @@
+image:
+  name: vehicle
+  command: ["vehicle.adapters.controllers.update_vehicle_controller.update_vehicle"]
+events:
+  - httpApi:
+      path: /vehicle/{id}
+      method: put
+      documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.update_vehicle}
+      authorizer:
+        name: autoDealAuthorizer
+        scopes: ["update:vehicle"]

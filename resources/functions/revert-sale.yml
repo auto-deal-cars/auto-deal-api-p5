@@ -1,0 +1,7 @@
+image:
+  name: vehicle
+  command: ["vehicle.adapters.controllers.revert_sale_controller.revert_sale"]
+events:
+  - sqs:
+      arn:
+        Fn::GetAtt: ["FailedPaymentQueue", "Arn"]

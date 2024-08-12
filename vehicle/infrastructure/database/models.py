@@ -29,7 +29,6 @@ class Vehicle(Base):
     year = Column(Integer)
     color = Column(String)
     price = Column(Float)
-    quantity = Column(Integer)
     brand = relationship('VehicleBrand', back_populates='vehicles')
     sold = relationship('VehicleSold', uselist=False, back_populates='vehicle')
     created_at = Column(DateTime, default=datetime.now)
@@ -42,6 +41,7 @@ class StatusEnum(enum.Enum):
     Represents the possible status of a SOLD vehicle.
     """
     draft = "draft"
+    awaiting_pickup = "awaiting_pickup"
     sold = "sold"
 
 class VehicleSold(Base):

@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: integer
+  brand_name:
+    type: string
+  model:
+    type: string
+  year:
+    type: integer
+  color:
+    type: string
+  price:
+    type: number

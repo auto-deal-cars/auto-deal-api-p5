@@ -1,0 +1,11 @@
+image:
+  name: vehicle
+  command: ["vehicle.adapters.controllers.cancel_sale_controller.cancel_sale"]
+events:
+  - httpApi:
+      path: /vehicle/{id}
+      method: delete
+      documentation: ${file(documentation/openapi/serverless.doc.yml):endpoints.cancel_sale}
+      authorizer:
+        name: autoDealAuthorizer
+        scopes: ["cancel:sale"]

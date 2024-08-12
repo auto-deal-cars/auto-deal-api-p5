@@ -1,0 +1,38 @@
+type: object
+properties:
+  message:
+    type: string
+  vehicle:
+    type: object
+    properties:
+      id:
+        type: number
+      brand_name:
+        type: string
+      model:
+        type: string
+      year:
+        type: integer
+      color:
+        type: string
+      price:
+        type: number
+      sold:
+        type: object
+        properties:
+          order_id:
+            type: number
+          vehicle_id:
+            type: string
+          status:
+            type: string
+          sold_price:
+            type: number
+          sold_date:
+            type: string
+          user_id:
+            type: number
+          created_at:
+            type: string
+          updated_at:
+            type: string

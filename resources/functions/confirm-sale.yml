@@ -1,0 +1,7 @@
+image:
+  name: vehicle
+  command: ["vehicle.adapters.controllers.confirm_sale_controller.confirm_sale"]
+events:
+  - sqs:
+      arn:
+        Fn::GetAtt: ["SuccessPaymentQueue", "Arn"]
