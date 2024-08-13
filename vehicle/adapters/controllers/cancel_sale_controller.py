@@ -22,3 +22,8 @@ def cancel_sale(event, context):
     repository = VehicleRepositoryAdapter(db)
     service = VehicleService(repository)
     service.revert_sale(vehicle_id)
+
+    return {
+        "message": "Sale cancelled successfully",
+        "statusCode": 200
+    }
