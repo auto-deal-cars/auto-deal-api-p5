@@ -22,3 +22,8 @@ def confirm_pickup(event, context):
     repository = VehicleRepositoryAdapter(db)
     service = VehicleService(repository)
     service.confirm_pickup(vehicle_id)
+
+    return {
+        "message": "Pickup confirmed successfully",
+        "statusCode": 200
+    }
