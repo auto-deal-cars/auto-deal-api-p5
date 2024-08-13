@@ -1,4 +1,4 @@
-[![Deploy CD](https://github.com/auto-deal-cars/auto-deal-user/actions/workflows/deploy.yml/badge.svg)](https://github.com/auto-deal-cars/auto-deal-user/actions/workflows/deploy.yml)
+[![Deploy CD](https://github.com/auto-deal-cars/auto-deal-api-p5/actions/workflows/deploy.yml/badge.svg)](https://github.com/auto-deal-cars/auto-deal-api-p5/actions/workflows/deploy.yml)
 
 # AutoDeal Payment - Uma solução AWS Lambda com Docker
 
