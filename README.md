@@ -1,6 +1,6 @@
 [![Deploy CD](https://github.com/auto-deal-cars/auto-deal-api-p5/actions/workflows/deploy.yml/badge.svg)](https://github.com/auto-deal-cars/auto-deal-api-p5/actions/workflows/deploy.yml)
 
-# AutoDeal Payment - Uma solução AWS Lambda com Docker
+# AutoDeal API - Uma solução AWS Lambda com Docker
 
 Aluno:
 
