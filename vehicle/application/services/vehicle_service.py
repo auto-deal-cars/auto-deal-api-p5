@@ -111,7 +111,7 @@ class VehicleService:
                 status_code=400,
             )
 
-        if vehicle.sold.status != StatusEnum.draft:
+        if vehicle.sold.status != StatusEnum.awaiting_pickup:
             raise VehicleAlreadyPickedUpError(
                 message="Vehicle already picked up or sale not initialized",
                 status_code=409,
